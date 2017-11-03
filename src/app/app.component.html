@@ -1,14 +1,18 @@
 <div fxLayout="row" fxLayoutAlign="center cetner">
-  <mat-card class="main-card" >
+  <mat-card class="main-card">
     <mat-card-header>
-      <app-display></app-display>
+      <app-display [balance]="balance"></app-display>
     </mat-card-header>
-    <mat-card-content>
-      <app-product></app-product>
+    <mat-card-subtitle>
+      Ассортимент товаров:
+    </mat-card-subtitle>
+    <mat-card-content fxLayoutWrap="wrap" fxLayout="row">
+      <app-product *ngFor="let product of products" [product]="product">
+      </app-product>
       <br>
-      <button mat-button>Сдача</button>
     </mat-card-content>
     <mat-card-actions>
+      <button mat-button>Сдача</button>
       <app-wallet></app-wallet>
       <app-wallet-vm></app-wallet-vm>
     </mat-card-actions>
