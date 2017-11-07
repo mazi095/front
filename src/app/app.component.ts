@@ -2,24 +2,33 @@ import {Component} from '@angular/core';
 import {VendingMachineService} from './_services/vending-machine.service';
 import {Product} from './_models/product';
 import {Transaction} from './_models/transaction';
+import {Coin} from './_models/coin';
+import {VendingMachineSystemService} from './_services/vending-machine-system.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [VendingMachineService]
+  providers: [VendingMachineService, VendingMachineSystemService]
 })
 export class AppComponent {
   title = 'VM';
+
   products: Product[];
+
+  vmCoinList: Coin[] = [];
+
+  userCoinList: Coin[] = [];
 
   balance: number;
 
   errorObj: any;
 
-  constructor(private vendingMachineService: VendingMachineService) {
+  constructor(private vendingMachineService: VendingMachineService,
+              private vendingMachineSystemService: VendingMachineSystemService) {
     this.getProductList();
     this.getBalance();
+    this.getVMCoinList();
   }
 
   getProductList(): void {
@@ -34,7 +43,7 @@ export class AppComponent {
   }
 
   getBalance(): void {
-    this.balance  = 0;
+    this.balance = 0;
     this.vendingMachineService.getBalance().subscribe(
       data => {
         let balance = 0;
@@ -49,5 +58,15 @@ export class AppComponent {
     );
   }
 
+  getVMCoinList(): void {
+    this.vendingMachineSystemService.getCoinList().subscribe(
+      data => {
+        this.vmCoinList = data;
+      },
+      error => {
+        this.errorObj = error;
+      }
+    );
+  }
 
 }

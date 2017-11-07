@@ -14,7 +14,14 @@
     <mat-card-actions>
       <button mat-button>Сдача</button>
       <app-wallet></app-wallet>
-      <app-wallet-vm></app-wallet-vm>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>VM:</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions>
+          <app-wallet-vm *ngFor="let coin of vmCoinList" [coin]="coin"></app-wallet-vm>
+        </mat-card-actions>
+      </mat-card>
     </mat-card-actions>
   </mat-card>
 </div>
