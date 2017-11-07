@@ -4,6 +4,7 @@ import {Product} from './_models/product';
 import {Transaction} from './_models/transaction';
 import {Coin} from './_models/coin';
 import {VendingMachineSystemService} from './_services/vending-machine-system.service';
+import {USER_COINS} from './_fixtures/mock-user-coin-list';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent {
     this.getProductList();
     this.getBalance();
     this.getVMCoinList();
+    this.userCoinList = USER_COINS;
   }
 
   getProductList(): void {
