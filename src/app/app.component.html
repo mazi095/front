@@ -12,14 +12,24 @@
       <br>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary">Сдача</button>
+      <button
+          mat-raised-button
+          color="primary"
+          (click)="getOddMoney()">
+        Сдача
+      </button>
       <br>
       <mat-card>
         <mat-card-header>
           <mat-card-title>Кошелек:</mat-card-title>
         </mat-card-header>
         <mat-card-actions>
-          <app-wallet *ngFor="let coin of userCoinList" [coin]="coin"></app-wallet>
+          <app-wallet
+              *ngFor="let coin of userCoinList"
+              [coin]="coin"
+              (onCoinSend)="onCoinSend($event)">
+
+          </app-wallet>
         </mat-card-actions>
       </mat-card>
 
@@ -28,11 +38,25 @@
           <mat-card-title>VM:</mat-card-title>
         </mat-card-header>
         <mat-card-actions>
-          <app-wallet-vm *ngFor="let coin of vmCoinList" [coin]="coin"></app-wallet-vm>
+          <app-wallet-vm
+              *ngFor="let coin of vmCoinList"
+              [coin]="coin">
+
+          </app-wallet-vm>
         </mat-card-actions>
       </mat-card>
-      <button mat-raised-button color="warn">Сбросить данные</button>
-      <button mat-raised-button color="warn">Ограбить</button>
+      <button
+          mat-raised-button
+          color="warn"
+          (click)="resetData()">
+        Сбросить данные
+      </button>
+      <button
+          mat-raised-button
+          color="warn"
+          (click)="robVM()">
+        Ограбить
+      </button>
     </mat-card-actions>
   </mat-card>
 </div>

@@ -5,8 +5,11 @@ import {Transaction} from './_models/transaction';
 import {Coin} from './_models/coin';
 import {VendingMachineSystemService} from './_services/vending-machine-system.service';
 import {USER_COINS} from './_fixtures/mock-user-coin-list';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {CommonDialogComponent} from './_components/common-dialog/common-dialog.component';
 
 @Component({
+  moduleId: 'app',
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -26,10 +29,15 @@ export class AppComponent {
   errorObj: any;
 
   constructor(private vendingMachineService: VendingMachineService,
-              private vendingMachineSystemService: VendingMachineSystemService) {
+              private vendingMachineSystemService: VendingMachineSystemService,
+              public dialog: MatDialog) {
     this.getProductList();
     this.getBalance();
     this.getVMCoinList();
+    this.getUserCoinList();
+  }
+
+  getUserCoinList(): void {
     this.userCoinList = USER_COINS;
   }
 
@@ -67,6 +75,44 @@ export class AppComponent {
       },
       error => {
         this.errorObj = error;
+      }
+    );
+  }
+
+  getOddMoney(): void {
+    this.vendingMachineService.returnCoin().subscribe(
+      data => {
+        data.forEach(transaction => {
+          this.userCoinList.find(function (element: Coin) {
+            if (element.denomination === transaction.coin_denomination) {
+              element.quantity++;
+              return true;
+            }
+            return false;
+          });
+        });
+        this.getBalance();
+      }
+    );
+  }
+
+  onCoinSend($dialogRef: MatDialogRef<CommonDialogComponent>): void {
+    this.getBalance();
+    $dialogRef.close();
+  }
+
+  resetData(): void {
+    this.vendingMachineSystemService.resetData().subscribe(
+      function () {
+        window.location.reload();
+      }
+    );
+  }
+
+  robVM(): void {
+    this.vendingMachineSystemService.robVM().subscribe(
+      function () {
+        window.location.reload();
       }
     );
   }
