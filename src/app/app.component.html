@@ -7,7 +7,9 @@
       Ассортимент товаров:
     </mat-card-subtitle>
     <mat-card-content fxLayoutWrap="wrap" fxLayout="row">
-      <app-product *ngFor="let product of products" [product]="product">
+      <app-product *ngFor="let product of products"
+                   [product]="product"
+                   (onBuyingProduct)="onBuyingProduct($event)">
       </app-product>
       <br>
     </mat-card-content>

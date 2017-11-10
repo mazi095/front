@@ -101,6 +101,12 @@ export class AppComponent {
     $dialogRef.close();
   }
 
+  onBuyingProduct(): void {
+    this.getBalance();
+    this.getProductList();
+    this.getVMCoinList();
+  }
+
   resetData(): void {
     this.vendingMachineSystemService.resetData().subscribe(
       function () {

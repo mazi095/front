@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Transaction} from '../_models/transaction';
-import {ByProductResponse} from '../_models/by-product-response';
+import {BuyProductResponse} from '../_models/buy-product-response';
 import {Product} from '../_models/product';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
@@ -15,7 +15,7 @@ export class VendingMachineService {
     return this.http.get('/back/add_coin/' + $denomination);
   }
 
-  byProduct($id): Observable<ByProductResponse> {
+  buyProduct($id): Observable<BuyProductResponse> {
     return this.http.get('/back/buy_product/' + $id);
   }
 

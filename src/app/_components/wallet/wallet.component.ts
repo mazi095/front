@@ -36,6 +36,7 @@ export class WalletComponent implements OnInit {
         },
         error => {
           console.log(error);
+          this.dialog.getDialogById('loading-dialog').close();
         }
       );
     }

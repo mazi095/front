@@ -1,7 +1,7 @@
 import {Product} from './product';
 import {Transaction} from './transaction';
 
-export class ByProductResponse {
+export class BuyProductResponse {
   product: Product;
   oddMoney: Transaction[];
 }
