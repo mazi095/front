@@ -18,30 +18,30 @@ import {CommonDialogComponent} from './_components/common-dialog/common-dialog.c
 export class AppComponent {
   title = 'VM';
 
-  products: Product[];
+  products:Product[];
 
-  vmCoinList: Coin[] = [];
+  vmCoinList:Coin[] = [];
 
-  userCoinList: Coin[] = [];
+  userCoinList:Coin[] = [];
 
-  balance: number;
+  balance:number = 0;
 
-  errorObj: any;
+  errorObj:any;
 
-  constructor(private vendingMachineService: VendingMachineService,
-              private vendingMachineSystemService: VendingMachineSystemService,
-              public dialog: MatDialog) {
+  constructor(private vendingMachineService:VendingMachineService,
+              private vendingMachineSystemService:VendingMachineSystemService,
+              public dialog:MatDialog) {
     this.getProductList();
     this.getBalance();
     this.getVMCoinList();
     this.getUserCoinList();
   }
 
-  getUserCoinList(): void {
+  getUserCoinList():void {
     this.userCoinList = USER_COINS;
   }
 
-  getProductList(): void {
+  getProductList():void {
     this.vendingMachineService.getProductList().subscribe(
       data => {
         this.products = data;
@@ -52,12 +52,11 @@ export class AppComponent {
     );
   }
 
-  getBalance(): void {
-    this.balance = 0;
+  getBalance():void {
     this.vendingMachineService.getBalance().subscribe(
       data => {
         let balance = 0;
-        data.forEach(function (transaction: Transaction) {
+        data.forEach(function (transaction:Transaction) {
           balance += transaction.coin_denomination;
         });
         this.balance = balance;
@@ -68,7 +67,7 @@ export class AppComponent {
     );
   }
 
-  getVMCoinList(): void {
+  getVMCoinList():void {
     this.vendingMachineSystemService.getCoinList().subscribe(
       data => {
         this.vmCoinList = data;
@@ -79,35 +78,28 @@ export class AppComponent {
     );
   }
 
-  getOddMoney(): void {
+  getOddMoney():void {
     this.vendingMachineService.returnCoin().subscribe(
       data => {
-        data.forEach(transaction => {
-          this.userCoinList.find(function (element: Coin) {
-            if (element.denomination === transaction.coin_denomination) {
-              element.quantity++;
-              return true;
-            }
-            return false;
-          });
-        });
+        this.recountUserCoin(data);
         this.getBalance();
       }
     );
   }
 
-  onCoinSend($dialogRef: MatDialogRef<CommonDialogComponent>): void {
+  onCoinSend($dialogRef:MatDialogRef<CommonDialogComponent>):void {
     this.getBalance();
     $dialogRef.close();
   }
 
-  onBuyingProduct(): void {
+  onBuyingProduct($transactions:Transaction[]):void {
     this.getBalance();
     this.getProductList();
     this.getVMCoinList();
+    this.recountUserCoin($transactions);
   }
 
-  resetData(): void {
+  resetData():void {
     this.vendingMachineSystemService.resetData().subscribe(
       function () {
         window.location.reload();
@@ -115,12 +107,24 @@ export class AppComponent {
     );
   }
 
-  robVM(): void {
+  robVM():void {
     this.vendingMachineSystemService.robVM().subscribe(
       function () {
         window.location.reload();
       }
     );
+  }
+
+  private recountUserCoin($transactions:Transaction[]) {
+    $transactions.forEach(transaction => {
+      this.userCoinList.find(function (element:Coin) {
+        if (element.denomination === transaction.coin_denomination) {
+          element.quantity++;
+          return true;
+        }
+        return false;
+      });
+    });
   }
 
 }

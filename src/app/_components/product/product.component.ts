@@ -5,6 +5,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {CommonDialogComponent} from '../common-dialog/common-dialog.component';
 import {BuyProductResponse} from '../../_models/buy-product-response';
 import {ErrorDialogComponent} from '../common-dialog/error-dialog.component';
+import {Transaction} from '../../_models/transaction';
 
 @Component({
   selector: 'app-product',
@@ -16,7 +17,7 @@ export class ProductComponent implements OnInit {
 
   @Input() product: Product;
 
-  @Output() onBuyingProduct = new EventEmitter<void>();
+  @Output() onBuyingProduct = new EventEmitter<Transaction[]>();
 
   constructor(public dialog: MatDialog, private vendingMachineService: VendingMachineService) {
   }
@@ -37,19 +38,23 @@ export class ProductComponent implements OnInit {
           const productComponetn = this;
           loadinDialog.afterClosed().subscribe(
             function () {
-              productComponetn.onBuyingProduct.emit();
+              productComponetn.onBuyingProduct.emit(data.odd_money);
               productComponetn.dialog.open(ProductDialogComponent, Object.assign({id: 'product-dialog', data: data}, this.config));
             }
           );
           loadinDialog.close();
         },
         error => {
-          const dialog = this.dialog;
+          const productComponent = this;
           loadinDialog.afterClosed().subscribe(
             function () {
-              dialog.open(ErrorDialogComponent, Object.assign(
-                {id: 'error-dialog', data: 'Недостаточно средств'},
-                this.config));
+              if (error.status === 406 ){
+                productComponent.dialog.open(ErrorDialogComponent, Object.assign(
+                  {id: 'error-dialog', data: error.error},
+                  productComponent.config));
+              }else{
+                console.log(error);
+              }
             }
           );
           loadinDialog.close();
